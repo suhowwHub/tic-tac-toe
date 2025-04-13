@@ -1,0 +1,20 @@
+.currentPlayer {
+	width: 40px;
+	height: 40px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: 2px solid #333;
+	font-size: 28px;
+}
+
+.currentPlayerTitle {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	column-gap: 10px;
+}
+
+.ticTacToe {
+	font-size: 70px;
+}

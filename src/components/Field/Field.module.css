@@ -12,18 +12,19 @@
 	justify-content: center;
 	align-items: center;
 	border: 2px solid #333;
-	font-size: 48px;
+	font-size: 28px;
 	cursor: pointer;
+	transition: 0.5s;
+	color: transparent;
 }
 
 .cell:hover {
 	background-color: #eee;
+	color: inherit;
+	font-size: 60px;
 }
 
-.x {
-	color: blue;
-}
-
-.o {
-	color: red;
+.active {
+	font-size: 60px;
+	color: inherit;
 }
