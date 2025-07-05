@@ -6,25 +6,3 @@
 	width: 325px;
 	height: 325px;
 }
-
-.cell {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	border: 2px solid #333;
-	font-size: 28px;
-	cursor: pointer;
-	transition: 0.5s;
-	color: transparent;
-}
-
-.cell:hover {
-	background-color: #eee;
-	color: inherit;
-	font-size: 60px;
-}
-
-.active {
-	font-size: 60px;
-	color: inherit;
-}
