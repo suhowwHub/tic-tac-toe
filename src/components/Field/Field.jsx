@@ -1,7 +1,8 @@
 import styles from "./Field.module.css"
 import { Cell } from "./Cell/Cell"
 import { isHaveEmptyCells, isEmptyCell } from "../../utils"
-import store from "../../store"
+import { store } from "../../store"
+import { useState, useEffect } from "react"
 
 const WIN_PATTERNS = [
 	[0, 1, 2],
@@ -15,21 +16,26 @@ const WIN_PATTERNS = [
 ]
 
 export default function Field() {
-	console.log("store", store)
-	const { field, currentPlayer, isGameEnded } = store.getState()
+	const [game, setGame] = useState(store.getState())
+
+	useEffect(() => {
+		const unsubsribe = store.subscribe(() => setGame(store.getState()))
+		return unsubsribe
+	}, [])
+
 	function overHoverHandler({ target }) {
-		if (isGameEnded) return
+		if (game.isGameEnded) return
 		const indexCell = target.getAttribute("data-index")
-		if (isEmptyCell(field[indexCell])) target.textContent = currentPlayer
+		if (isEmptyCell(game.field[indexCell])) target.textContent = game.currentPlayer
 	}
 	function leaveHoverHandler({ target }) {
-		if (isGameEnded) return
+		if (game.isGameEnded) return
 		const indexCell = target.getAttribute("data-index")
-		target.textContent = field[indexCell]
+		target.textContent = game.field[indexCell]
 	}
 	function clickCellHandler({ target }) {
 		const indexCell = target.getAttribute("data-index")
-		if (isGameEnded || !isEmptyCell(field[indexCell])) return
+		if (game.isGameEnded || !isEmptyCell(game.field[indexCell])) return
 		store.dispatch({
 			type: "SET_PLAYER_IN_CELL",
 			payload: { indexCell },
@@ -53,7 +59,7 @@ export default function Field() {
 
 	return (
 		<div className={styles.field}>
-			{field.map((cell, i) => (
+			{game.field.map((cell, i) => (
 				<Cell
 					key={i}
 					index={i}

@@ -1,4 +1,5 @@
-import { configureStore as createStore } from "@reduxjs/toolkit";
+import { createStore } from "redux";
 import { gameReducer } from "./reducer";
 
-export default createStore({ reducer: gameReducer })
+export const store = createStore(gameReducer)
+
