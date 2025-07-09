@@ -1,11 +1,13 @@
 import styles from "./App.module.css"
 import Field from "../Field/Field"
 import Information from "../Information/Information"
-import { store } from "../../store"
+import { useDispatch } from "react-redux"
+import { START_AGAIN } from "../actions"
 
 export default function App() {
+	const dispatch = useDispatch()
 	function startAgainButtonHandler() {
-		store.dispatch({ type: "START_AGAIN" })
+		dispatch(START_AGAIN)
 	}
 
 	return (

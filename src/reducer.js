@@ -9,7 +9,7 @@ export const gameReducer = (state = initialState, { type, payload }) => {
 	switch (type) {
 		case "SET_PLAYER_IN_CELL": {
 			const newField = [...state.field]
-			newField[payload.indexCell] = state.currentPlayer
+			newField[payload] = state.currentPlayer
 			return { ...state, field: newField }
 		}
 		case "TOGGLE_CURRENT_PLAYER": {

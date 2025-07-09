@@ -1,0 +1,1 @@
+export const TOGGLE_CURRENT_PLAYER = { type: "TOGGLE_CURRENT_PLAYER" }

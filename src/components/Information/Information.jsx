@@ -1,34 +1,27 @@
 import styles from "./Information.module.css"
 import { isHaveFilledCell } from "../../utils"
-import { store } from "../../store"
-import { useState, useEffect } from "react"
+import { useSelector, useDispatch } from "react-redux"
+import { TOGGLE_CURRENT_PLAYER } from "../actions"
 
 export default function Information() {
-	const [game, setGame] = useState(store.getState())
-
-	useEffect(() => {
-		const unsubsribe = store.subscribe(() => setGame(store.getState()))
-		return unsubsribe
-	}, [])
+	const field = useSelector((state) => state.field)
+	const currentPlayer = useSelector((state) => state.currentPlayer)
+	const isGameEnded = useSelector((state) => state.isGameEnded)
+	const isDraw = useSelector((state) => state.isDraw)
+	const dispatch = useDispatch()
 
 	function togglePlayerHandler() {
-		if (!isHaveFilledCell(game.field)) {
-			store.dispatch({ type: "TOGGLE_CURRENT_PLAYER", payload: game.currentPlayer })
+		if (!isHaveFilledCell(field)) {
+			dispatch(TOGGLE_CURRENT_PLAYER)
 		}
 	}
 
 	return (
 		<>
 			<h1 className={styles.ticTacToe}>Tic Tac Toe</h1>
-			<h1>
-				{game.isGameEnded
-					? game.isDraw
-						? "Ничья"
-						: `Победил ${game.currentPlayer}`
-					: ""}
-			</h1>
+			<h1>{isGameEnded ? (isDraw ? "Ничья" : `Победил ${currentPlayer}`) : ""}</h1>
 			<h2 className={styles.currentPlayerTitle} onClick={togglePlayerHandler}>
-				Ход: <span className={styles.currentPlayer}>{game.currentPlayer}</span>
+				Ход: <span className={styles.currentPlayer}>{currentPlayer}</span>
 			</h2>
 		</>
 	)

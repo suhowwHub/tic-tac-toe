@@ -1,8 +1,14 @@
 import styles from "./Field.module.css"
 import { Cell } from "./Cell/Cell"
 import { isHaveEmptyCells, isEmptyCell } from "../../utils"
-import { store } from "../../store"
-import { useState, useEffect } from "react"
+import { useSelector, useDispatch } from "react-redux"
+import {
+	GAME_OVER_IS_DRAW,
+	TOGGLE_CURRENT_PLAYER,
+	setPlayerInCell,
+	gameOverHasWinner,
+} from "../actions"
+import { useEffect } from "react"
 
 const WIN_PATTERNS = [
 	[0, 1, 2],
@@ -16,50 +22,43 @@ const WIN_PATTERNS = [
 ]
 
 export default function Field() {
-	const [game, setGame] = useState(store.getState())
+	const isGameEnded = useSelector((state) => state.isGameEnded)
+	const field = useSelector((state) => state.field)
+	const currentPlayer = useSelector((state) => state.currentPlayer)
+	const dispatch = useDispatch()
 
 	useEffect(() => {
-		const unsubsribe = store.subscribe(() => setGame(store.getState()))
-		return unsubsribe
-	}, [])
-
-	function overHoverHandler({ target }) {
-		if (game.isGameEnded) return
-		const indexCell = target.getAttribute("data-index")
-		if (isEmptyCell(game.field[indexCell])) target.textContent = game.currentPlayer
-	}
-	function leaveHoverHandler({ target }) {
-		if (game.isGameEnded) return
-		const indexCell = target.getAttribute("data-index")
-		target.textContent = game.field[indexCell]
-	}
-	function clickCellHandler({ target }) {
-		const indexCell = target.getAttribute("data-index")
-		if (game.isGameEnded || !isEmptyCell(game.field[indexCell])) return
-		store.dispatch({
-			type: "SET_PLAYER_IN_CELL",
-			payload: { indexCell },
-		})
-		store.dispatch({ type: "TOGGLE_CURRENT_PLAYER" })
-		gameObserver()
-	}
-
-	function gameObserver() {
-		const { field } = store.getState()
 		WIN_PATTERNS.forEach((pattern) => {
 			const [a, b, c] = pattern
 			if (field[a] === field[b] && field[b] === field[c] && field[a] !== "") {
-				store.dispatch({ type: "GAME_OVER_HAS_WINNER", payload: field[a] })
+				dispatch(gameOverHasWinner(field[a]))
 				return
 			} else if (!isHaveEmptyCells(field)) {
-				store.dispatch({ type: "GAME_OVER_IS_DRAW" })
+				dispatch(GAME_OVER_IS_DRAW)
 			}
 		})
+	}, [field])
+
+	function overHoverHandler({ target }) {
+		if (isGameEnded) return
+		const indexCell = target.getAttribute("data-index")
+		if (isEmptyCell(field[indexCell])) target.textContent = currentPlayer
+	}
+	function leaveHoverHandler({ target }) {
+		if (isGameEnded) return
+		const indexCell = target.getAttribute("data-index")
+		target.textContent = field[indexCell]
+	}
+	function clickCellHandler({ target }) {
+		const indexCell = target.getAttribute("data-index")
+		if (isGameEnded || !isEmptyCell(field[indexCell])) return
+		dispatch(setPlayerInCell(indexCell))
+		dispatch(TOGGLE_CURRENT_PLAYER)
 	}
 
 	return (
 		<div className={styles.field}>
-			{game.field.map((cell, i) => (
+			{field.map((cell, i) => (
 				<Cell
 					key={i}
 					index={i}

@@ -10,4 +10,3 @@ export function isEmptyCell(cell) {
 	if (cell) return false
 	else return true
 }
-
