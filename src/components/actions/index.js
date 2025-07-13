@@ -1,5 +1,5 @@
 export * from "./game-over-has-winner"
 export * from "./game-over-is-draw"
-export * from "./set-player-in-cell"
+export * from "./player-in-cell"
 export * from "./start-again"
 export * from "./toggle-current-player"

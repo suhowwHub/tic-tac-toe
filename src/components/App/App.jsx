@@ -1,22 +1,35 @@
 import styles from "./App.module.css"
 import Field from "../Field/Field"
 import Information from "../Information/Information"
-import { useDispatch } from "react-redux"
+import { connect } from "react-redux"
 import { START_AGAIN } from "../actions"
+import { Component } from "react"
 
-export default function App() {
-	const dispatch = useDispatch()
-	function startAgainButtonHandler() {
-		dispatch(START_AGAIN)
+class AppContainer extends Component {
+	constructor() {
+		super()
 	}
-
-	return (
-		<div className={styles.app}>
-			<Information />
-			<Field />
-			<div className={styles.button} onClick={startAgainButtonHandler}>
-				Начать заново
+	startAgainButtonHandler() {
+		const { setStartAgain } = this.props
+		setStartAgain()
+	}
+	render() {
+		return (
+			<div className={styles.app}>
+				<Information />
+				<Field />
+				<div
+					className={styles.button}
+					onClick={this.startAgainButtonHandler.bind(this)}>
+					Начать заново
+				</div>
 			</div>
-		</div>
-	)
+		)
+	}
 }
+
+const mapDispatchToProps = (dispatch) => ({
+	setStartAgain: () => dispatch(START_AGAIN),
+})
+
+export default connect(null, mapDispatchToProps)(AppContainer)

@@ -1,28 +1,44 @@
 import styles from "./Information.module.css"
 import { isHaveFilledCell } from "../../utils"
-import { useSelector, useDispatch } from "react-redux"
+import { connect } from "react-redux"
 import { TOGGLE_CURRENT_PLAYER } from "../actions"
+import { Component } from "react"
 
-export default function Information() {
-	const field = useSelector((state) => state.field)
-	const currentPlayer = useSelector((state) => state.currentPlayer)
-	const isGameEnded = useSelector((state) => state.isGameEnded)
-	const isDraw = useSelector((state) => state.isDraw)
-	const dispatch = useDispatch()
-
-	function togglePlayerHandler() {
+class InformationContainer extends Component {
+	constructor() {
+		super()
+	}
+	togglePlayerHandler() {
+		const { field } = this.props
+		const { setCurrentPlayer } = this.props
 		if (!isHaveFilledCell(field)) {
-			dispatch(TOGGLE_CURRENT_PLAYER)
+			setCurrentPlayer()
 		}
 	}
-
-	return (
-		<>
-			<h1 className={styles.ticTacToe}>Tic Tac Toe</h1>
-			<h1>{isGameEnded ? (isDraw ? "Ничья" : `Победил ${currentPlayer}`) : ""}</h1>
-			<h2 className={styles.currentPlayerTitle} onClick={togglePlayerHandler}>
-				Ход: <span className={styles.currentPlayer}>{currentPlayer}</span>
-			</h2>
-		</>
-	)
+	render() {
+		const { isGameEnded, isDraw, currentPlayer } = this.props
+		return (
+			<>
+				<h1 className={styles.ticTacToe}>Tic Tac Toe</h1>
+				<h1>{isGameEnded ? (isDraw ? "Ничья" : `Победил ${currentPlayer}`) : ""}</h1>
+				<h2
+					className={styles.currentPlayerTitle}
+					onClick={this.togglePlayerHandler.bind(this)}>
+					Ход: <span className={styles.currentPlayer}>{currentPlayer}</span>
+				</h2>
+			</>
+		)
+	}
 }
+
+const mapStateToProps = (state) => ({
+	isGameEnded: state.isGameEnded,
+	field: state.field,
+	currentPlayer: state.currentPlayer,
+	isDraw: state.isDraw,
+})
+const mapDispatchToProps = (dispatch) => ({
+	setCurrentPlayer: () => dispatch(TOGGLE_CURRENT_PLAYER),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(InformationContainer)
